@@ -13,7 +13,6 @@ namespace E_Commerce.Web
 
             var app = builder.Build();
 
-
             #region Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -26,4 +25,4 @@ namespace E_Commerce.Web
             app.Run();
         }
     }
-}
+} 
