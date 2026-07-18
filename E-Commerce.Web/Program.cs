@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Persistence.Data;
+
 namespace E_Commerce.Web
 {
     public class Program
@@ -8,7 +11,11 @@ namespace E_Commerce.Web
 
             #region Add services to the container.
             builder.Services.AddControllers();
-            builder.Services.AddOpenApi(); 
+            builder.Services.AddOpenApi();
+            builder.Services.AddDbContext<StoreDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
             #endregion
 
             var app = builder.Build();
