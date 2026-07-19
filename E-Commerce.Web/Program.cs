@@ -28,7 +28,7 @@ namespace E_Commerce.Web
             {
                 using var Scope = app.Services.CreateScope();
                 var objectOfDataSeeding = Scope.ServiceProvider.GetRequiredService<IDataSeeding>();
-                objectOfDataSeeding.DataSeed();
+                objectOfDataSeeding.DataSeedAsync();
             }
             catch (Exception)
             {
