@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.Data;
 using Persistence.Repositories;
+using Service.Mapping;
 
 namespace E_Commerce.Web
 {
@@ -21,6 +22,7 @@ namespace E_Commerce.Web
             });
             builder.Services.AddScoped<IDataSeeding, DataSeeding>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ProductProfile>());
             #endregion
 
             var app = builder.Build();
