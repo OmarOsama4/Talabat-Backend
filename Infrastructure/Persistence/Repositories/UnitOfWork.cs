@@ -4,7 +4,7 @@ using Persistence.Data;
 
 namespace Persistence.Repositories
 {
-    public class UnitOfWork(StoreDbContext _dbContext) : IUnitOFWork
+    public class UnitOfWork(StoreDbContext _dbContext) : IUnitOfWork
     {
         private readonly Dictionary<string, object> repositories = [];
         public IGenericRepository<TEntity, TKey> GetRepository<TEntity, TKey>() where TEntity : BaseEntity<TKey>
