@@ -1,10 +1,11 @@
 using DomainLayer.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using Persistence.Data;
 using Persistence.Repositories;
-using Service.Mapping;
 using Service;
+using Service.Mapping;
 using ServiceAbstraction;
 
 namespace E_Commerce.Web
@@ -25,7 +26,8 @@ namespace E_Commerce.Web
             builder.Services.AddScoped<IDataSeeding, DataSeeding>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IServiceManager, ServiceManager>();
-            builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ProductProfile>());
+            builder.Services.AddAutoMapper(cfg =>
+            { }, typeof(Service.AssemblyReference).Assembly);
             #endregion
 
             var app = builder.Build();
