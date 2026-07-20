@@ -50,6 +50,7 @@ namespace E_Commerce.Web
                 app.MapOpenApi();
             }
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.MapControllers(); 
             #endregion
 
