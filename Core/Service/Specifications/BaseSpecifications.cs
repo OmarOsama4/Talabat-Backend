@@ -6,10 +6,10 @@ namespace Service.Specifications
 {
     abstract public class BaseSpecifications<TEntity, TKey> : ISpecifications<TEntity, TKey> where TEntity : BaseEntity<TKey>
     {
-        public Expression<Func<TEntity, bool>> Criteria { get; private set; }
+        public Expression<Func<TEntity, bool>>? Criteria { get; private set; }
         public List<Expression<Func<TEntity, object>>> IncludeExpressions { get; } = [];
 
-        protected BaseSpecifications(Expression<Func<TEntity, bool>> criteriaExp)
+        protected BaseSpecifications(Expression<Func<TEntity, bool>>? criteriaExp)
         {
             Criteria = criteriaExp;
         }
