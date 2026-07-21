@@ -31,6 +31,7 @@ namespace Service.Specifications
                 default:
                     break;
             }
+            ApplyPagination(quertyParams.PageSize, quertyParams.PageIndex);
         }
 
         //Get Product by Id with Brand and Type
