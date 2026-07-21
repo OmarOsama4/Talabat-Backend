@@ -8,7 +8,8 @@ namespace Service.Specifications
         //Get All Products with Brand and Type
         public ProductWithBrandAndTypeSpecifications(ProductQuertyParams quertyParams)
             : base(p => (!quertyParams.BrandId.HasValue || p.BrandId == quertyParams.BrandId)
-                  && (!quertyParams.TypeId.HasValue || p.TypeId == quertyParams.TypeId))
+                  && (!quertyParams.TypeId.HasValue || p.TypeId == quertyParams.TypeId)
+                  && (string.IsNullOrEmpty(quertyParams.SearchValue) || p.Name.ToLower().Contains(quertyParams.SearchValue.ToLower())))
         {
             AddInclude(p => p.ProductBrand);
             AddInclude(p => p.ProductType);
