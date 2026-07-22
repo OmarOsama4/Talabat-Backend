@@ -1,11 +1,10 @@
 using DomainLayer.Contracts;
+using E_Commerce.Web.CustomMiddleWares;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using Persistence.Data;
 using Persistence.Repositories;
 using Service;
-using Service.Mapping;
 using ServiceAbstraction;
 
 namespace E_Commerce.Web
@@ -46,6 +45,7 @@ namespace E_Commerce.Web
             #endregion
 
             #region Configure the HTTP request pipeline.
+            app.UseMiddleware<CustomExceptionHandlerMiddleWare>();
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
