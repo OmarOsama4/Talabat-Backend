@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DomainLayer.Models.ProductModule;
-using Shared.DataTransferObjects;
+using Shared.DataTransferObjects.ProductModuleDTO;
 
 namespace Service.Mapping
 {
