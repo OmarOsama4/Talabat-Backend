@@ -1,6 +1,4 @@
-﻿using Shared.Error_Models;
-using Shared.ErrorModels;
-using System.Text.Json;
+﻿using Shared.ErrorModels;
 
 namespace E_Commerce.Web.CustomMiddleWares
 {
