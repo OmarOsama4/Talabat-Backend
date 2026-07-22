@@ -1,13 +1,14 @@
-﻿using Shared.ErrorModels;
+﻿using DomainLayer.Exceptions;
+using Shared.ErrorModels;
 
 namespace E_Commerce.Web.CustomMiddleWares
 {
     public class CustomExceptionHandlerMiddleWare
     {
         private readonly RequestDelegate _next;
-        private readonly Logger<CustomExceptionHandlerMiddleWare> logger;
+        private readonly ILogger<CustomExceptionHandlerMiddleWare> logger;
 
-        public CustomExceptionHandlerMiddleWare(RequestDelegate next, Logger<CustomExceptionHandlerMiddleWare> logger)
+        public CustomExceptionHandlerMiddleWare(RequestDelegate next, ILogger<CustomExceptionHandlerMiddleWare> logger)
         {
             _next = next;
             this.logger = logger;
@@ -22,11 +23,16 @@ namespace E_Commerce.Web.CustomMiddleWares
             catch (Exception ex)
             {
                 logger.LogError(ex, "Something Went Wrong");
-                httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+                httpContext.Response.StatusCode = ex switch
+                {
+                    NotFoundException => StatusCodes.Status404NotFound,
+                    _ => StatusCodes.Status500InternalServerError
+                };
 
                 var response = new ErrorToReturn
                 {
-                    StatusCode = StatusCodes.Status500InternalServerError,
+                    StatusCode = httpContext.Response.StatusCode,
                     ErrorMessage = ex.Message
                 };
                 await httpContext.Response.WriteAsJsonAsync(response);
