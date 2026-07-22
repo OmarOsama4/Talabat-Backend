@@ -10,7 +10,7 @@
         public string? SearchValue { get; set; }
         public int PageIndex { get; set; } = 1;
         
-        private int pageSize; 
+        private int pageSize = defaultPageSize; 
         public int PageSize
         {
             get { return pageSize; }
