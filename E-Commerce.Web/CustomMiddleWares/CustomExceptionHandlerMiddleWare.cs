@@ -19,21 +19,39 @@ namespace E_Commerce.Web.CustomMiddleWares
             try
             {
                 await _next.Invoke(httpContext);
+                await HandleNotFoundEndPointAsync(httpContext);
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Something Went Wrong");
+                await HandleExceptionAsync(httpContext, ex);
+            }
+        }
 
-                httpContext.Response.StatusCode = ex switch
-                {
-                    NotFoundException => StatusCodes.Status404NotFound,
-                    _ => StatusCodes.Status500InternalServerError
-                };
+        private static async Task HandleExceptionAsync(HttpContext httpContext, Exception ex)
+        {
+            httpContext.Response.StatusCode = ex switch
+            {
+                NotFoundException => StatusCodes.Status404NotFound,
+                _ => StatusCodes.Status500InternalServerError
+            };
 
+            var response = new ErrorToReturn
+            {
+                StatusCode = httpContext.Response.StatusCode,
+                ErrorMessage = ex.Message
+            };
+            await httpContext.Response.WriteAsJsonAsync(response);
+        }
+
+        private static async Task HandleNotFoundEndPointAsync(HttpContext httpContext)
+        {
+            if (httpContext.Response.StatusCode == StatusCodes.Status404NotFound)
+            {
                 var response = new ErrorToReturn
                 {
-                    StatusCode = httpContext.Response.StatusCode,
-                    ErrorMessage = ex.Message
+                    StatusCode = StatusCodes.Status404NotFound,
+                    ErrorMessage = $"End Point {httpContext.Request.Path} is Not Found"
                 };
                 await httpContext.Response.WriteAsJsonAsync(response);
             }
