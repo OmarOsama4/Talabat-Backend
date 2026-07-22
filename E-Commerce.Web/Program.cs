@@ -3,13 +3,11 @@ using E_Commerce.Web.CustomMiddleWares;
 using E_Commerce.Web.Factories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens.Experimental;
 using Persistence;
 using Persistence.Data;
 using Persistence.Repositories;
 using Service;
 using ServiceAbstraction;
-using Shared.ErrorModels;
 
 namespace E_Commerce.Web
 {
