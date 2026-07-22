@@ -9,7 +9,6 @@ namespace Service
         {
             Services.AddScoped<IServiceManager, ServiceManager>();
             Services.AddAutoMapper(cfg => { }, typeof(Service.AssemblyReference).Assembly);
-            Services.AddScoped<IBasketService, BasketService>();
             return Services;
         }
     }
