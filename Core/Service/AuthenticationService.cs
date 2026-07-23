@@ -1,6 +1,8 @@
-﻿using DomainLayer.Exceptions;
+﻿using AutoMapper;
+using DomainLayer.Exceptions;
 using DomainLayer.Models.IdentityModule;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ServiceAbstraction;
@@ -12,8 +14,36 @@ using System.Text;
 namespace Service
 {
     public class AuthenticationService(UserManager<ApplicationUser> userManager,
-        IConfiguration configuration) : IAuthenticationService
+        IConfiguration configuration,
+        IMapper mapper) : IAuthenticationService
     {
+        public async Task<bool> CheckEmailAsync(string email)
+        {
+            var User = await userManager.FindByEmailAsync(email);
+            return User is not null;
+        }
+
+        public async Task<AddressDTO> GetUserAddressAsync(string email)
+        {
+            var User = await userManager.Users.Include(U => U.Address)
+                                        .FirstOrDefaultAsync(U => U.Email == email) ?? throw new UserNotFoundException(email);
+            if (User.Address is not null)
+                return mapper.Map<Address, AddressDTO>(User.Address);
+            else 
+                throw new AddressNotFoundException(User.UserName!);
+        }
+
+        public async Task<UserDTO> GetUserAsync(string email)
+        {
+            var User = await userManager.FindByEmailAsync(email) ?? throw new UserNotFoundException(email);
+            return new UserDTO() 
+            {
+                DisplayName = User.DisplayName,
+                Email = User.Email!,
+                Token = await CreateTokenAsync(User)
+            };
+        }
+
         public async Task<UserDTO> LoginAsync(LoginDTO loginDTO)
         {
             var User = await userManager.FindByEmailAsync(loginDTO.Email) ?? throw new UserNotFoundException(loginDTO.Email);
@@ -52,6 +82,26 @@ namespace Service
                 var Errors = result.Errors.Select(e => e.Description).ToList();
                 throw new BadRequestException(Errors);
             }
+        }
+
+        public async Task<AddressDTO> UpdateUserAddressAsync(string email, AddressDTO addressDTO)
+        {
+            var User = await userManager.Users.Include(U => U.Address)
+                                        .FirstOrDefaultAsync(U => U.Email == email) ?? throw new UserNotFoundException(email);
+            if (User.Address is not null)
+            {
+                User.Address.FirstName = addressDTO.FirstName;
+                User.Address.LastName = addressDTO.LastName;
+                User.Address.City = addressDTO.City;
+                User.Address.Country = addressDTO.Country;
+                User.Address.Street = addressDTO.Street;
+            }
+            else
+            {
+                User.Address = mapper.Map<AddressDTO, Address>(addressDTO);
+            }
+            await userManager.UpdateAsync(User);
+            return mapper.Map<AddressDTO>(User.Address);
         }
 
         private async Task<string> CreateTokenAsync(ApplicationUser User)

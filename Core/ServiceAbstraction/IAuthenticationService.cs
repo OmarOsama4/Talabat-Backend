@@ -8,7 +8,7 @@ namespace ServiceAbstraction
         Task<UserDTO> LoginAsync(LoginDTO loginDTO);
         Task<bool> CheckEmailAsync(string email);
         Task<AddressDTO> GetUserAddressAsync(string email);
-        Task<AddressDTO> UpdateUserAddressAsync(string email);
+        Task<AddressDTO> UpdateUserAddressAsync(string email, AddressDTO addressDTO);
         Task<UserDTO> GetUserAsync(string email);
     }
 }
