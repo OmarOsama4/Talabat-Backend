@@ -1,14 +1,7 @@
-using DomainLayer.Contracts;
 using E_Commerce.Web.CustomMiddleWares;
 using E_Commerce.Web.Extensions;
-using E_Commerce.Web.Factories;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Persistence;
-using Persistence.Data;
-using Persistence.Repositories; 
 using Service;
-using ServiceAbstraction;
 
 namespace E_Commerce.Web
 {
