@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Shared.DataTransferObjects.IdentityDTO
+﻿namespace Shared.DataTransferObjects.IdentityDTO
 {
     public class UserDTO
     {
