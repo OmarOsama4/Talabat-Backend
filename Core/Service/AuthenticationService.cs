@@ -17,15 +17,40 @@ namespace Service
                 {
                     DisplayName = User.DisplayName,
                     Email = User.Email!,
-                    Token = "ToDo"
+                    Token = CreateTokenAsync(User)
                 };
             else
                 throw new UnauthorizedException();
         }
 
-        public Task<UserDTO> RegisterAsync(RegisterDTO registerDTO)
+        public async Task<UserDTO> RegisterAsync(RegisterDTO registerDTO)
         {
-            throw new NotImplementedException();
+            var User = new ApplicationUser
+            {
+                Email = registerDTO.Email,
+                UserName = registerDTO.UserName,
+                DisplayName = registerDTO.DisplayName,
+                PhoneNumber = registerDTO.PhoneNumber
+            };
+            var result = await userManager.CreateAsync(User, registerDTO.Password);
+
+            if (result.Succeeded)
+                return new UserDTO
+                {
+                    DisplayName = User.DisplayName,
+                    Email = User.Email!,
+                    Token = CreateTokenAsync(User)
+                };
+            else
+            {
+                var Errors = result.Errors.Select(e => e.Description).ToList();
+                throw new BadRequestException(Errors);
+            }
+        }
+
+        private static string CreateTokenAsync(ApplicationUser User)
+        {
+            return "ToDo";
         }
     }
 }
