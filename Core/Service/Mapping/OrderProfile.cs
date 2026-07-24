@@ -17,6 +17,8 @@ namespace Service.Mapping
             CreateMap<OrderItem, OrderItemDTO>()
                 .ForMember(D => D.ProductName, o => o.MapFrom(s => s.Product.ProductName))
                 .ForMember(D => D.PictureUrl, o => o.MapFrom<OrderItemPictureUrlResolver>());
+
+            CreateMap<DeliveryMethod, DeliveryMethodDTO>();
         }
     }
 }
