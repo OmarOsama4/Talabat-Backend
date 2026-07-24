@@ -1,5 +1,6 @@
 ﻿using DomainLayer.Contracts;
 using DomainLayer.Models.IdentityModule;
+using DomainLayer.Models.OrderModule;
 using DomainLayer.Models.ProductModule;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -54,26 +55,36 @@ namespace Persistence
                     }
                 }
 
+                if (!_dbContext.Set<DeliveryMethod>().Any())
+                {
+                    using var DeliveryMethodData = File.OpenRead(@"..\Infrastructure\Persistence\Data\DataSeed\delivery.json");
+                    var DeliveryMethods = await JsonSerializer.DeserializeAsync<List<DeliveryMethod>>(DeliveryMethodData);
+                    if (DeliveryMethods is not null && DeliveryMethods.Any())
+                    {
+                        await _dbContext.Set<DeliveryMethod>().AddRangeAsync(DeliveryMethods);
+                    }
+                }
+
                 await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                //To Do
+                Console.WriteLine(ex);
             }
 
         }
 
         public async Task IdentityDataSeedAsync()
         {
-            if (!roleManager.Roles.Any())
+            try
             {
-                await roleManager.CreateAsync(new IdentityRole("Admin"));
-                await roleManager.CreateAsync(new IdentityRole("SuperAdmin"));
-            }
+                if (!roleManager.Roles.Any())
+                {
+                    await roleManager.CreateAsync(new IdentityRole("Admin"));
+                    await roleManager.CreateAsync(new IdentityRole("SuperAdmin"));
+                }
 
-            if (!userManager.Users.Any())
-            {
-                try
+                if (!userManager.Users.Any())
                 {
                     var User01 = new ApplicationUser
                     {
@@ -95,14 +106,11 @@ namespace Persistence
 
                     await userManager.AddToRoleAsync(User01, "SuperAdmin");
                     await userManager.AddToRoleAsync(User02, "Admin");
-
-                    await storeIdentityDbContext.SaveChangesAsync();
                 }
-                catch (Exception ex)
-                {
-                    //To Do
-                }
-
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
             }
         }
     }
