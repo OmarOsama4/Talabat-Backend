@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace DomainLayer.Models.OrderModule
+﻿namespace DomainLayer.Models.OrderModule
 {
     public class Order : BaseEntity<Guid>
     {
