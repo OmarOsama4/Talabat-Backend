@@ -1,6 +1,6 @@
 ﻿namespace DomainLayer.Models.OrderModule
 {
-    public class DeliveryMethods : BaseEntity<int>
+    public class DeliveryMethod : BaseEntity<int>
     {
         public string ShortName { get; set; } = default!;
         public string Description { get; set; } = default!;
