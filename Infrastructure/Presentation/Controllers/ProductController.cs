@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ServiceAbstraction;
 using Shared;
 using Shared.DataTransferObjects.ProductModuleDTO;
@@ -9,6 +10,7 @@ namespace Presentation.Controllers
     [Route("api/[controller]")]
     public class ProductController(IServiceManager serviceManager) : ControllerBase
     {
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<PaginatedResult<ProductDTO>>> GetAllProducts([FromQuery]ProductQuertyParams quertyParams)
         {
