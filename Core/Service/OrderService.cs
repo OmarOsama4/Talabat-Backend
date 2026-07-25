@@ -3,6 +3,7 @@ using DomainLayer.Contracts;
 using DomainLayer.Exceptions;
 using DomainLayer.Models.OrderModule;
 using DomainLayer.Models.ProductModule;
+using Service.Specifications;
 using Service.Specifications.OrderModuleSpecifications;
 using ServiceAbstraction;
 using Shared.DataTransferObjects.IdentityDTO;
@@ -16,8 +17,14 @@ namespace Service
     {
         public async Task<OrderToReturnDTO> CreateOrder(OrderDTO orderDTO, string email)
         {
-            var OrderAddress = mapper.Map<AddressDTO, OrderAddress>(orderDTO.Address);
             var Basket = await basketRepository.GetBasketAsync(orderDTO.BasketId) ?? throw new BasketNotFoundException(orderDTO.BasketId);
+            ArgumentNullException.ThrowIfNullOrEmpty(Basket.paymentIntentId);
+            var OrderRepo = unitOfWork.GetRepository<Order, Guid>();
+
+            var OrderSpec = new OrderWithPaymentIntentIdSpecification(Basket.paymentIntentId);
+            var ExistingOrder = await OrderRepo.GetByIdAsync(OrderSpec);
+            if (ExistingOrder is not null) OrderRepo.Remove(ExistingOrder);
+            var OrderAddress = mapper.Map<AddressDTO, OrderAddress>(orderDTO.Address);
             List<OrderItem> orderItems = [];
             var ProductRepo = unitOfWork.GetRepository<Product, int>();
 
@@ -38,9 +45,9 @@ namespace Service
 
             var SubTotal = orderItems.Sum(I => I.Quantity *  I.Price);
 
-            var Order = new Order(email, OrderAddress, DeliveryMethod, orderItems, SubTotal);
+            var Order = new Order(email, OrderAddress, DeliveryMethod, orderItems, SubTotal, Basket.paymentIntentId);
 
-            await unitOfWork.GetRepository<Order, Guid>().AddAsync(Order);
+            await OrderRepo.AddAsync(Order);
             await unitOfWork.SaveChangesAsync();
 
             return mapper.Map<Order, OrderToReturnDTO>(Order);
