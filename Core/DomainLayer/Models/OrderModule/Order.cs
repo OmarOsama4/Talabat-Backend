@@ -6,13 +6,14 @@
         {
             
         }
-        public Order(string userEmail, OrderAddress address, DeliveryMethod deliveryMethod, ICollection<OrderItem> items, decimal subTotal)
+        public Order(string userEmail, OrderAddress address, DeliveryMethod deliveryMethod, ICollection<OrderItem> items, decimal subTotal, string paymentIntentId)
         {
             UserEmail = userEmail;
             Address = address;
             DeliveryMethod = deliveryMethod;
             Items = items;
             SubTotal = subTotal;
+            PaymentIntentId = paymentIntentId;
         }
 
         public string UserEmail { get; set; } = default!;
@@ -25,5 +26,6 @@
         public OrderStatus OrderStatus { get; set; }
         
         public decimal GetTotal() => SubTotal + DeliveryMethod.Price;
+        public string PaymentIntentId { get; set; }
     }
 }
