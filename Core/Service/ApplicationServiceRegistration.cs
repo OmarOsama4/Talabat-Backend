@@ -8,6 +8,7 @@ namespace Service
         public static IServiceCollection AddApplicationServices(this IServiceCollection Services)
         {
             Services.AddScoped<IServiceManager, ServiceManager>();
+            Services.AddScoped<ICacheService, CacheService>();
             Services.AddAutoMapper(cfg => { }, typeof(Service.AssemblyReference).Assembly);
             return Services;
         }
